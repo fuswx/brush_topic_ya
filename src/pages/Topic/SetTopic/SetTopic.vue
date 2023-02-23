@@ -8,34 +8,43 @@
       <div id="title-div">
         <div id="title">
           <span>
-            <h1><input name="title" type="text" id="title-text" placeholder="请输入标题名称"/></h1>
+            <h1>
+              <input name="title" type="text" v-model="postDatas.title" id="title-text" placeholder="请输入标题名称"/>
+            </h1>
           </span>
         </div>
       </div>
 
       <div id="right-box-content">
+        <component ref="component" style="border-top: solid 2px rgba(230,230,230,0.6);padding-top: 10px" v-bind:isStatus="'create'" v-for="(component,index) in componentsName" :key="index" :is="component.name"></component>
 
+        <el-row v-if="componentsName.length>=1" style="border-top: solid 2px rgba(230,230,230,0.6);padding-top: 10px">
+          <el-button type="primary" plain @click="open">我要提交</el-button>
+        </el-row>
       </div>
-      <form method="post" id="total-content" action="${pageContext.request.contextPath}/form/submit.do">
-        <div id="none-box" style="display: none">
-          <input type="text" id="pageTitle" name="pageTitle">
-          <input type="text" id="totalTitle" name="totalTitle">
-          <input type="text" id="totalText" name="totalText">
-          <input type="text" id="submitType" name="submitType" value="submit">
-          <input type="text" id="formId" name="formId" value="null">
-        </div>
-      </form>
 
-      <div id="show-box" ref="showBox">
-        <span id="input-title">{{inputTitle}}</span>
-        <div id="input-contents">
-          <div id="box-checked">
+      <transition
+          enter-active-class="animate__animated animate__bounceInLeft"
+          leave-active-class="animate__animated animate__bounceOutLeft"
+      >
+        <div id="show-box" ref="showBox">
+          <span id="input-title">{{inputTitle}}</span>
+          <div id="input-contents">
+            <div id="box-checked">
             <span id="input-content">
-              <span v-html="inputContent">inputContent</span>
+<!--              <span v-html="inputContent">inputContent</span>-->
+              <Radio     v-bind:isStatus="'show'" v-if="this.inputId===1"></Radio>
+              <CheckBox  v-bind:isStatus="'show'" v-if="this.inputId===2"></CheckBox>
+              <Select    v-bind:isStatus="'show'" v-if="this.inputId===3"></Select>
+              <Input     v-bind:isStatus="'show'" v-if="this.inputId===4"></Input>
+              <Inputs    v-bind:isStatus="'show'" v-if="this.inputId===5"></Inputs>
+              <TextAreas v-bind:isStatus="'show'" v-if="this.inputId===6"></TextAreas>
+              <Icon      v-bind:isStatus="'show'" v-if="this.inputId===7"></Icon>
             </span>
+            </div>
           </div>
         </div>
-      </div>
+      </transition>
 
     </div>
 
@@ -43,12 +52,21 @@
 </template>
 
 <script>
-import TreeList from "@/components/TreeList/TreeList.vue";
 import {mapState} from "vuex";
+import {v4 as uuidv4} from "uuid";
+
+import TreeList from "@/components/TreeList/TreeList.vue";
+import Radio from "@/components/Inputs/Radio/Radio.vue";
+import CheckBox from "@/components/Inputs/CheckBox/CheckBox.vue";
+import Select from "@/components/Inputs/Select/Select.vue";
+import Input from "@/components/Inputs/Input/Input.vue";
+import Inputs from "@/components/Inputs/Inputs/Inputs.vue";
+import Icon from "@/components/Inputs/Icon/Icon.vue";
+import TextAreas from "@/components/Inputs/TextAreas/TextAreas.vue";
 
 export default {
   name: "SetTopic",
-  components: {TreeList},
+  components: {TextAreas, Icon, Inputs, Input, Select, CheckBox, Radio, TreeList},
   computed: {
     ...mapState({
       allInput: state => state.SetTopic.allInput
@@ -63,35 +81,91 @@ export default {
       },
       inputTitle: "",
       inputContent: "",
+      inputId: 0,
+      postDatas:{
+        id: uuidv4(),
+        title: "",
+        components:[],
+        uploadUserId: Math.round(Math.random()*100),
+        uploadTime: null,
+        updateTime: null,
+        eg: ""
+      },
       datas: [
         {title: '选择题',data: [{label: '单选',inputId: 1},{label: '多选',inputId: 2},{label: '下拉框',inputId: 3}]},
         {title: '填空题',data: [{label: '单项填空',inputId: 4},{label: '多项填空',inputId: 5},{label: '矩阵填空',inputId: 6},{label: '表格填空',inputId: 7}]},
-        {title: '填空题',data: [{label: '矩阵单选',inputId: 8},{label: '矩阵量表',inputId: 9},{label: '矩阵滑动条',inputId: 10},{label: '表格下拉框',inputId: 11}]},
-        {title: '填空题',data: [{label: '量表题',inputId: 12},{label: 'NPS量表',inputId: 13},{label: '评分单选',inputId: 14},{label: '评分多选',inputId: 15},{label: '矩阵量表',inputId: 16},{label: '评价题',inputId: 17}]},
-        {title: '填空题',data: [{label: '姓名',inputId: 18},{label: '基本信息',inputId: 19},{label: '性别',inputId: 20},{label: '年龄段',inputId: 21},{label: '省市',inputId: 22},{label: '省市区',inputId: 23},{label: '手机',inputId: 24},{label: '日期',inputId: 25},{label: '时间',inputId: 26},{label: '职业',inputId: 27},{label: '行业',inputId: 28},{label: '高校',inputId: 29},{label: '邮寄地址',inputId: 30}]},
-          ]
+        {title: '矩阵题',data: [{label: '矩阵单选',inputId: 8},{label: '矩阵量表',inputId: 9},{label: '矩阵滑动条',inputId: 10},{label: '表格下拉框',inputId: 11}]},
+        {title: '量表题',data: [{label: '量表题',inputId: 12},{label: 'NPS量表',inputId: 13},{label: '评分单选',inputId: 14},{label: '评分多选',inputId: 15},{label: '矩阵量表',inputId: 16},{label: '评价题',inputId: 17}]},
+        {title: '个人信息',data: [{label: '姓名',inputId: 18},{label: '基本信息',inputId: 19},{label: '性别',inputId: 20},{label: '年龄段',inputId: 21},{label: '省市',inputId: 22},{label: '省市区',inputId: 23},{label: '手机',inputId: 24},{label: '日期',inputId: 25},{label: '时间',inputId: 26},{label: '职业',inputId: 27},{label: '行业',inputId: 28},{label: '高校',inputId: 29},{label: '邮寄地址',inputId: 30}]},
+          ],
+      componentsName: [],
     }
   },
   methods:{
     enterMethod(inputId){
+      this.inputId=inputId+1;
       this.inputTitle=this.allInput[inputId].desc
       this.inputContent=this.allInput[inputId].content
       this.$refs.showBox.style.display="block"
-      this.$refs.showBox.style.top=event.clientY+"px"
+      this.$refs.showBox.style.top=event.clientY+document.body.scrollTop+-this.$refs.showBox.clientHeight/2+"px"
+      if (event.clientY-this.$refs.showBox.clientHeight/2<60){
+        this.$refs.showBox.style.top='60px'
+      }
     },
     leaveMethod(){
       this.$refs.showBox.style.display="none"
+    },
+    clickMethod(inputId){
+      this.componentsName.push({name:this.allInput[inputId].name})
+    },
+    submitQuestionnaire(){
+      for (let i = 0; i < this.componentsName.length; i++) {
+        const component={
+          componentName: this.componentsName[i].name,
+          title: this.$refs.component[i].title,
+          items: this.$refs.component[i].items
+        };
+        this.postDatas.components.push(component)
+      }
+      this.postDatas.updateTime=new Date();
+      this.postDatas.uploadTime=new Date();
+      //提交创建的表单信息
+      console.log(this.postDatas);
+      this.$store.dispatch("submitDefinitionForm",this.postDatas)
+    },
+    open() {
+      this.$confirm('确认提交?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.submitQuestionnaire();
+        this.$message({
+          type: 'success',
+          message: '提交成功!'
+        });
+      }).catch(() => {
+        this.postDatas.components=[]
+        this.$message({
+          type: 'info',
+          message: '提交失败'
+        });
+      });
     }
   },
   mounted() {
     //派发action获取组件的数据
     this.$store.dispatch("findAllInput")
-  }
+  },
 }
 </script>
 
 <style scoped lang="less">
 @import "public/definition";
+
+.el-button {
+  transition: @transition-all;
+}
 
 #slider {
   box-shadow: rgba(0,0,0,0.10) 3px 3px 2px;
@@ -103,6 +177,7 @@ export default {
   --animate-delay: 0s;
   overflow-y: auto;
   height: calc(100vh - ~"@{headerHeight}");
+  background-color: white;
 }
 
 input::-webkit-input-placeholder {
@@ -126,12 +201,18 @@ input,textarea {
 
 #left-box {
   width: @sliderWidth;
-  height: 1000px;
 }
 #right-box {
   background-color: white;
   width: calc(~"(100% - @{sliderWidth})");
   float: right;
+}
+#right-box-content {
+  div {
+    margin-bottom: 20px;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
 }
 
 #tab-treetable {
@@ -139,7 +220,7 @@ input,textarea {
   width: @sliderWidth;
   position: fixed;
   overflow-y: auto;
-  margin-right: 0px;
+  margin-right: 0;
   background-color: white;
 }
 
@@ -200,9 +281,9 @@ input,textarea {
   width: 100%;
   height: 120px;
   cursor: pointer;
+  background-color: white;
 }
 #title {
-  width: 80%;
   height: 70px;
   margin: 0 auto;
   text-align: center;
@@ -221,12 +302,9 @@ input,textarea {
 #others {
   width: 95%;
   height: 30px;
-  margin-top: 20px;
-  margin-left: 5%;
   text-align: left;
   line-height: 30px;
-  margin-bottom: 20px;
-  margin-right: 3%;
+  margin: 20px 3% 20px 5%;
 }
 
 #others > #others-content {
@@ -252,6 +330,8 @@ input,textarea {
   border-radius: 10px;
   left: @sliderWidth;
   border: 2px cornflowerblue solid;
+  z-index: @maxZIndex;
+  padding-bottom: 10px;
 }
 #input-content {
   font-weight: 700;
@@ -273,7 +353,7 @@ input,textarea {
   width: 95%;
   margin-left: 10px;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 .input-warp {
   display: block;

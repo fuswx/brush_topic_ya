@@ -39,20 +39,21 @@ export default {
   },
   methods:{
     showSilder(){
-      let scrollTop=document.documentElement.scrollTop || document.body.scrollTop;
-      if (scrollTop<10){
-        this.isShow=true
-        this.$refs.content.$el.style.width=this.contentWidth+'px'
-      }else {
-        this.isShow=false
-        this.$refs.content.$el.style.width=this.contentWidth+this.$refs.silder.$el.clientWidth+'px'
+      if (this.$route.path!=='/topic/setTopic'){
+        let scrollTop=document.documentElement.scrollTop || document.body.scrollTop;
+        if (scrollTop<10){
+          this.isShow=true
+          this.$refs.content.$el.style.width=this.contentWidth+'px'
+        }else {
+          this.isShow=false
+          this.$refs.content.$el.style.width=this.contentWidth+this.$refs.silder.$el.clientWidth+'px'
+        }
       }
     }
   },
   mounted() {
     window.addEventListener('scroll',this.showSilder)
     this.contentWidth=this.$refs.content.$el.clientWidth
-    console.log(window.innerWidth)
   }
 }
 </script>
@@ -90,10 +91,10 @@ export default {
   #content {
     float: right;
     width: calc(~"(100% - @{sliderWidth})");
-    min-height: 1000px;
     transition: @transition-all;
     margin-top: 0;
     background-color: #f4f4f4;
+    min-height: calc(90vh);
   }
 }
 </style>

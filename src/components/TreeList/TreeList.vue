@@ -1,6 +1,6 @@
 <template>
   <el-col id="slider" :span="12">
-    <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
+    <el-menu default-active="2" class="el-menu-vertical-demo">
       <!--树表格-->
       <el-submenu :index="index+''" v-for="(ele,index) in datas" :key="ele.data.inputId">
         <template slot="title">
@@ -9,8 +9,8 @@
             <span>{{ele.title}}</span>
           </div>
         </template>
-        <el-tree :data="ele.data" :props="defaultProps" @node-click="handleNodeClick">
-          <div class="el-tree-node" slot-scope="{ node, data }"  @mouseenter="enterMethod(data.inputId)" @mouseleave="leaveMethod">
+        <el-tree :data="ele.data" :props="defaultProps">
+          <div class="el-tree-node" slot-scope="{ node, data }" @click="clickMethod(data.inputId)" @mouseenter="enterMethod(data.inputId)" @mouseleave="leaveMethod">
             <div class="el-tree-node__content option">
                   <span class="custom-tree-node">
                     <span>
@@ -41,20 +41,14 @@ export default {
     }
   },
   methods:{
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleNodeClick(data) {
-      console.log(data);
-    },
     enterMethod(inputId){
       this.$parent.enterMethod(inputId-1)
     },
     leaveMethod(){
       this.$parent.leaveMethod()
+    },
+    clickMethod(inputId){
+      this.$parent.clickMethod(inputId-1)
     }
   },
   mounted() {

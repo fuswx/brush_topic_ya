@@ -1,4 +1,4 @@
-import {findAllInput} from "@/api";
+import {findAllInput, submitDefinitionForm} from "@/api";
 
 const state={
     allInput: []
@@ -16,6 +16,11 @@ const actions={
         if (result.code===200){
             commit("FINDALLINPUT",result.data)
         }
+    },
+
+    async submitDefinitionForm({commit},params){
+        let result=await submitDefinitionForm(params)
+        return result.code
     }
 };
 

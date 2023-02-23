@@ -39,3 +39,9 @@ export const findAllInput=()=>requests({
     url: `/input/findAll.do`,
     method: 'get'
 })
+
+export const submitDefinitionForm=(form)=>requests({
+    url: '/form/saveForm.do',
+    method: 'post',
+    data: form,
+})
