@@ -1,8 +1,17 @@
 <template>
   <div>
-    <Title @getTitle="getTitle" v-bind:title="title" v-bind:isStatus="isStatus"></Title>
+    <Title @getTitle="getTitle" v-bind:index="index" v-bind:title="title" v-bind:isStatus="isStatus"></Title>
 
-    <el-select v-model="checked" clearable placeholder="请选择">
+    <el-select v-if="isStatus==='create'||isStatus==='show'" v-model="initAnswer[0]" clearable placeholder="请选择">
+      <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
+    </el-select>
+    <div v-if="isStatus==='create'">
+      <el-input placeholder="请输入内容" v-model="items[index]" clearable
+                v-for="(item,index) in items" :key="index">
+      </el-input>
+    </div>
+
+    <el-select v-if="isStatus==='list'" v-model="initAnswer[0]" clearable placeholder="请选择">
       <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
     </el-select>
 
@@ -18,12 +27,12 @@ import Single from "@/components/Inputs/Select/Single/Single.vue";
 export default {
   name: "Select",
   components: {Single, UpdateButton, Title},
-  props:['datas','isStatus'],
+  props:['datas','isStatus','index'],
   data(){
     return {
+      initAnswer: [''],
       items: this.datas===undefined?['选项1','选项2','选项3']:this.datas.items,
       title: this.datas===undefined?'':this.datas.title,
-      checked: '',
       itemCount: this.datas===undefined?3:this.datas.items.length,
     }
   },
@@ -34,7 +43,7 @@ export default {
     },
     subComponent(){
       if (--this.itemCount<=0){
-        this.$el.parentNode.removeChild(this.$el)
+        this.$parent.componentsName.splice(this.index,1)
       }else {
         this.items.pop()
       }
@@ -48,4 +57,10 @@ export default {
 
 <style lang="less">
 @import "public/inputsCommon";
+.el-select {
+  text-align: left;
+  left: 0;
+  display: block!important;
+  width: 40%;
+}
 </style>

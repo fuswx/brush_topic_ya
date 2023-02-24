@@ -16,7 +16,13 @@
       </div>
 
       <div id="right-box-content">
-        <component ref="component" style="border-top: solid 2px rgba(230,230,230,0.6);padding-top: 10px" v-bind:isStatus="'create'" v-for="(component,index) in componentsName" :key="index" :is="component.name"></component>
+        <component ref="component"
+                   style="border-top: solid 2px rgba(230,230,230,0.6);padding-top: 10px"
+                   v-bind:isStatus="'create'"
+                   v-bind:index="index"
+                   v-for="(component,index) in componentsName"
+                   :key="index" :is="component.name">
+        </component>
 
         <el-row v-if="componentsName.length>=1" style="border-top: solid 2px rgba(230,230,230,0.6);padding-top: 10px">
           <el-button type="primary" plain @click="open">我要提交</el-button>
@@ -74,6 +80,7 @@ export default {
   },
   data(){
     return {
+      id: '',
       filterText: '',
       defaultProps: {
         children: 'children',
@@ -120,18 +127,29 @@ export default {
     },
     submitQuestionnaire(){
       for (let i = 0; i < this.componentsName.length; i++) {
+        let initAnswer=[];
+        let items=[];
+        const inputsName=['Input','Inputs','TextAreas','Icon'];//对填空答案进行特殊处理
+        if (inputsName.includes(this.componentsName[i].name)){
+          initAnswer=this.$refs.component[i].items;
+          items=[];
+        }else {
+          initAnswer=this.$refs.component[i].initAnswer;
+          items=this.$refs.component[i].items;
+        }
         const component={
           componentName: this.componentsName[i].name,
           title: this.$refs.component[i].title,
-          items: this.$refs.component[i].items
+          items: items,
+          initAnswer: initAnswer
         };
         this.postDatas.components.push(component)
       }
       this.postDatas.updateTime=new Date();
       this.postDatas.uploadTime=new Date();
       //提交创建的表单信息
-      console.log(this.postDatas);
       this.$store.dispatch("submitDefinitionForm",this.postDatas)
+      this.$router.push("/topic/getTopic?formId="+this.postDatas.id)
     },
     open() {
       this.$confirm('确认提交?', '提示', {
@@ -165,6 +183,8 @@ export default {
 
 .el-button {
   transition: @transition-all;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 #slider {
@@ -324,7 +344,7 @@ input,textarea {
   width: 400px;
   background-color: rgba(255,255,255,0.6);
   min-height: 200px;
-  position: absolute;
+  position: fixed;
   display: none;
   transition: 1s;
   border-radius: 10px;

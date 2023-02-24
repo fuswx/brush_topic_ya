@@ -45,3 +45,11 @@ export const submitDefinitionForm=(form)=>requests({
     method: 'post',
     data: form,
 })
+
+export const getTopicForm=(formId)=>requests({
+    url: `/form/getForm.do`,
+    method: 'get',
+    params: {
+        formId
+    }
+})

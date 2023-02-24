@@ -1,9 +1,9 @@
 <template>
   <div>
     <!--  题目标题  -->
-    <Title @getTitle="getTitle" v-bind:title="title" v-bind:isStatus="isStatus"></Title>
+    <Title @getTitle="getTitle" v-bind:index="index" v-bind:title="title" v-bind:isStatus="isStatus"></Title>
 
-    <el-checkbox-group v-model="checkedOptions" @change="handleCheckedOptionsChange">
+    <el-checkbox-group v-model="initAnswer" @change="handleCheckedOptionsChange">
       <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
     </el-checkbox-group>
 
@@ -19,10 +19,10 @@ import Single from "@/components/Inputs/CheckBox/Single/Single.vue";
 export default {
   name: "CheckBox",
   components: {Single, UpdateButton, Title},
-  props:['datas','isStatus'],
+  props:['datas','isStatus','index'],
   data(){
     return {
-      checkedOptions: ['选项1'],
+      initAnswer: ['选项1'],
       itemCount: this.datas===undefined?2:this.datas.items.length,
       isIndeterminate: true,
       title: this.datas===undefined?'':this.datas.title,
@@ -41,7 +41,7 @@ export default {
     },
     subComponent(){
       if (--this.itemCount<=0){
-        this.$el.parentNode.removeChild(this.$el)
+        this.$parent.componentsName.splice(this.index,1)
       }else {
         this.items.pop()
       }

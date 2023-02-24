@@ -29,3 +29,10 @@
   border-radius: 5px;
 }
 /*滑动条结束*/
+
+/*list中题目标题最外盒子*/
+#inputBox {
+  display: block;
+  text-align: left;
+
+}

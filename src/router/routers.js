@@ -1,6 +1,8 @@
 import Home from "@/pages/Home/Home.vue";
-import Topic from "@/pages/Topic/Topic.vue";
 import SetTopic from "@/pages/Topic/SetTopic/SetTopic.vue";
+import GetTopic from "@/pages/Topic/GetTopic/GetTopic.vue";
+import Topic from "@/pages/Topic/Topic.vue";
+import ListForm from "@/pages/Topic/ListForm/ListForm.vue";
 
 export default [
     {
@@ -13,11 +15,19 @@ export default [
     {
         path: "/topic",
         component: Topic,
-        children:[
+        children: [
             {
-                path: 'setTopic',
-                component: SetTopic
+                path: "listForm",
+                component: ListForm
             }
         ]
-    }
+    },
+    {
+        path: "/topic/setTopic",
+        component: SetTopic,
+    },
+    {
+        path: "/topic/getTopic",
+        component: GetTopic,
+    },
 ];

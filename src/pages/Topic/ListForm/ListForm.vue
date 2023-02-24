@@ -1,13 +1,12 @@
 <template>
-<div id="topic">
-  <router-view></router-view>
+<div>
+  <h1>listForm</h1>
 </div>
 </template>
 
 <script>
-
 export default {
-  name: "Topic",
+  name: "ListForm"
 }
 </script>
 

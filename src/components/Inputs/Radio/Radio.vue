@@ -1,17 +1,14 @@
 <template>
   <div>
     <!--  题目标题  -->
-    <Title @getTitle="getTitle" v-bind:title="title" v-bind:isStatus="isStatus"></Title>
+    <Title @getTitle="getTitle" v-bind:index="index" v-bind:title="title" v-bind:isStatus="isStatus"></Title>
 
-    <el-radio-group v-model="radio">
-      <div v-if="isStatus==='show'||isStatus==='create'">
-        <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
-      </div>
+    <el-radio-group v-model="initAnswer[0]" v-if="isStatus==='show'||isStatus==='create'">
+      <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
+    </el-radio-group>
 
-      <div v-if="isStatus==='list'">
-        <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
-      </div>
-
+    <el-radio-group id="inputBox" v-model="initAnswer[0]" v-if="isStatus==='list'">
+      <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
     </el-radio-group>
 
     <UpdateButton v-if="isStatus==='create'"></UpdateButton>
@@ -26,13 +23,13 @@ import Single from "@/components/Inputs/Radio/Single/Single.vue";
 export default {
   name: "Radio",
   components: {Single, UpdateButton, Title},
-  props:['datas','isStatus'],
+  props:['datas','isStatus','index'],
   data(){
     return {
-      radio: '选项一',
+      initAnswer: ['选项一'],
       title: this.datas===undefined?'':this.datas.title,
       items: this.datas===undefined?['选项一','选项二']:this.datas.items,
-      itemCount: this.datas===undefined?2:this.datas.items.length
+      itemCount: this.datas===undefined?2:this.datas.items.length,
     }
   },
   methods:{
@@ -42,7 +39,7 @@ export default {
     },
     subComponent(){
       if (--this.itemCount<=0){
-        this.$el.parentNode.removeChild(this.$el)
+        this.$parent.componentsName.splice(this.index,1)
       }else {
         this.items.pop()
       }
@@ -56,8 +53,6 @@ export default {
 
 <style lang="less">
 @import "public/inputsCommon";
-
-
 
 .questionTextDiv {
   text-align: center;
@@ -76,5 +71,6 @@ export default {
     font-size: 20px;
   }
 }
+
 
 </style>

@@ -13,8 +13,8 @@
         </router-link>
       </el-menu-item>
       <el-menu-item class="el-menu-item-hover" index="3">
-        <router-link to="/home">
-          试卷
+        <router-link to="/topic/listForm">
+          问卷
         </router-link>
       </el-menu-item>
       <el-menu-item class="el-menu-item-hover" index="4">

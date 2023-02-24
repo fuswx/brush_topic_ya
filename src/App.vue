@@ -5,10 +5,10 @@
       <transition
           enter-active-class="animate__animated animate__backInLeft animate__faster"
           leave-active-class="animate__animated animate__backOutLeft animate__fast">
-        <Slider ref="silder" id="slider" v-show="isShow&&this.$route.path!=='/topic/setTopic'"></Slider>
+        <Slider ref="slider" id="slider" v-show="isShow&&this.$route.path!=='/topic/setTopic'"></Slider>
       </transition>
 
-      <Content :style="this.$route.path==='/topic/setTopic'?hiddenSilder:''" id="content" ref="content"></Content>
+      <Content :style="this.$route.path==='/topic/setTopic'?hiddenSlider:''" id="content" ref="content"></Content>
     </div>
   </div>
 </template>
@@ -32,28 +32,37 @@ export default {
     return {
       isShow: true,
       contentWidth: null,
-      hiddenSilder: {
+      sliderWidth: null,
+      hiddenSlider: {
         width: '100%'
       }
     }
   },
   methods:{
-    showSilder(){
+    showSlider(){
       if (this.$route.path!=='/topic/setTopic'){
-        let scrollTop=document.documentElement.scrollTop || document.body.scrollTop;
-        if (scrollTop<10){
-          this.isShow=true
-          this.$refs.content.$el.style.width=this.contentWidth+'px'
-        }else {
-          this.isShow=false
-          this.$refs.content.$el.style.width=this.contentWidth+this.$refs.silder.$el.clientWidth+'px'
-        }
+        this.resize()
+      }
+    },
+    resize(){
+      let scrollTop=document.documentElement.scrollTop || document.body.scrollTop;
+      if (scrollTop<=0){
+        this.isShow=true
+        this.$refs.content.$el.style.width=this.contentWidth+'px'
+      }else {
+        this.isShow=false
+        this.$refs.content.$el.style.width=this.contentWidth+this.sliderWidth+'px'
       }
     }
   },
   mounted() {
-    window.addEventListener('scroll',this.showSilder)
+    window.addEventListener('scroll',this.showSlider)
+    window.addEventListener('resize',()=>{
+      this.contentWidth=document.body.clientWidth-this.sliderWidth
+      this.resize()
+    })
     this.contentWidth=this.$refs.content.$el.clientWidth
+    this.sliderWidth=this.$refs.slider.$el.clientWidth
   }
 }
 </script>
@@ -81,11 +90,21 @@ export default {
   margin-top: @headerHeight;
   height: auto;
 
+  &::after {
+    content: '';
+    /*建议加个height:0*/
+    height: 0;
+    display: block;
+    clear: both;
+    visibility: hidden;
+  }
+
   #slider {
     position: fixed;
     top: calc(~"@{headerHeight}");
     width: @sliderWidth;
     --animate-delay: 0s;
+    background-color: white;
   }
 
   #content {

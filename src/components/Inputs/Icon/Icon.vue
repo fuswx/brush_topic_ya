@@ -1,6 +1,6 @@
 <template>
 <div>
-  <Title @getTitle="getTitle" v-bind:title="title" v-bind:isStatus="isStatus"></Title>
+  <Title @getTitle="getTitle" v-bind:index="index" v-bind:title="title" v-bind:isStatus="isStatus"></Title>
 
   <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
 
@@ -16,11 +16,12 @@ import Single from "@/components/Inputs/Icon/Single/Single.vue";
 export default {
   name: "Icon",
   components: {Single, UpdateButton, Title},
-  props:['datas','isStatus'],
+  props:['datas','isStatus','index'],
   computed: {
   },
   data() {
     return {
+      initAnswer: [],
       items: this.datas===undefined?['']:this.datas.items,
       title: this.datas===undefined?'':this.datas.title,
       itemCount: this.datas===undefined?0:this.datas.items.length,
@@ -33,7 +34,7 @@ export default {
     },
     subComponent(){
       if (--this.itemCount<=0){
-        this.$el.parentNode.removeChild(this.$el)
+        this.$parent.componentsName.splice(this.index,1)
       }else {
         this.items.pop()
       }

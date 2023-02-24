@@ -5,6 +5,7 @@ import Vuex from "vuex";
 //引入小仓库
 import Slider from "@/store/Slider";
 import SetTopic from "@/store/Topic/SetTopic";
+import GetTopic from "@/store/Topic/GetTopic";
 
 Vue.use(Vuex);
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
     //实现Vuex仓库模块化开发存储数据
     modules: {
         Slider,
-        SetTopic
+        SetTopic,
+        GetTopic
     }
 })

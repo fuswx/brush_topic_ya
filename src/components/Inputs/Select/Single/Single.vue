@@ -5,6 +5,12 @@
       <input class="itemsName" v-model="items[index]" :placeholder="item">
     </el-option>
   </div>
+
+  <div v-if="isStatus==='list'">
+    <el-option v-for="(item,index) in items" v-model="items[index]" :key="item" :label="item" :value="item">
+    </el-option>
+  </div>
+
 </div>
 </template>
 
@@ -15,6 +21,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 
 </style>

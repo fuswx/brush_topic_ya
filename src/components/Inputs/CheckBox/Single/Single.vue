@@ -5,6 +5,13 @@
         <input class="itemsName" v-model="items[index]" :placeholder="item">
       </el-checkbox>
     </div>
+
+    <div id="outBox" v-if="isStatus==='list'">
+      <el-checkbox border v-model="items[index]"
+                   v-for="(item,index) in items"
+                   :label="item" :key="index">
+      </el-checkbox>
+    </div>
   </div>
 </template>
 
@@ -16,8 +23,14 @@ export default {
 </script>
 
 <style scoped lang="less">
-.el-checkbox {
-  margin-bottom: 10px;
-  margin-right: 0;
+#outBox {
+  display: block;
+  text-align: left;
+
+  .el-checkbox {
+    margin-bottom: 10px;
+    margin-right: 20px;
+  }
 }
+
 </style>
