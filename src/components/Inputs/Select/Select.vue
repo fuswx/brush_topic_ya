@@ -11,7 +11,7 @@
       </el-input>
     </div>
 
-    <el-select v-if="isStatus==='list'" v-model="initAnswer[0]" clearable placeholder="请选择">
+    <el-select v-if="isStatus==='list'||isStatus==='get'" v-model="initAnswer[0]" clearable placeholder="请选择">
       <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
     </el-select>
 

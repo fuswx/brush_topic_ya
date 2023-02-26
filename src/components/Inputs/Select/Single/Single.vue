@@ -6,7 +6,7 @@
     </el-option>
   </div>
 
-  <div v-if="isStatus==='list'">
+  <div v-if="isStatus==='list'||isStatus==='get'">
     <el-option v-for="(item,index) in items" v-model="items[index]" :key="item" :label="item" :value="item">
     </el-option>
   </div>

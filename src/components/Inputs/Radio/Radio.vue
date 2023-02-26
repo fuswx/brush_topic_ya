@@ -7,7 +7,7 @@
       <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
     </el-radio-group>
 
-    <el-radio-group id="inputBox" v-model="initAnswer[0]" v-if="isStatus==='list'">
+    <el-radio-group id="inputBox" v-model="initAnswer[0]" v-if="isStatus==='get'||isStatus==='list'">
       <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
     </el-radio-group>
 

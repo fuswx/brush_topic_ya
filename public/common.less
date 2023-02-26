@@ -1,3 +1,9 @@
+@import "public/definition";
+
+a {
+  text-decoration: none;
+}
+
 #noHover:hover {
   background-color: rgba(0,0,0,0)!important;
 }
@@ -35,4 +41,20 @@
   display: block;
   text-align: left;
 
+}
+
+/*清除浮动*/
+.clearFloat {
+  &::after {
+    content: '';
+    /*建议加个height:0*/
+    height: 0;
+    display: block;
+    clear: both;
+    visibility: hidden;
+  }
+}
+
+.el-button {
+  transition: @transition-all;
 }

@@ -14,7 +14,7 @@ const actions={
     async getTopicFrom({commit},formId){
         let result=await getTopicForm(formId);
         if (result.code===200){
-            commit("GETTOPICFORM",result.data[0])
+            commit("GETTOPICFORM",result.data)
         }
     }
 };

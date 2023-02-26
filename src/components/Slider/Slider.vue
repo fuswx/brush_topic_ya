@@ -19,6 +19,12 @@ export default {
     ...mapGetters(['datas'])
   },
   methods: {
+    leaveMethod(){},
+    enterMethod(){
+    },
+    clickMethod(id){
+      console.log(id)
+    }
   },
   mounted() {
     //派发action获取组件的数据
@@ -39,7 +45,7 @@ export default {
 }
 
 #slider {
-  box-shadow: rgba(0,0,0,0.10) 3px 3px 2px;
+  box-shadow: @box-shadow-all;
   float: left;
   height: calc(100vh - ~"@{headerHeight}");
 }

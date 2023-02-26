@@ -53,3 +53,22 @@ export const getTopicForm=(formId)=>requests({
         formId
     }
 })
+
+export const getAllForm=(params)=>{
+    return requests({
+    url: `/form/getAllForm.do?pageNum=${params.pageNum}&pageSize=${params.pageSize}`,
+    method: 'get',
+})}
+
+/*
+Question相关API
+ */
+export const getQuestionById=(id)=>requests({
+    url: `/question/getQuestionById.do?id=${id}`,
+    method: 'get'
+})
+
+export const getAllQuestion=(params)=>requests({
+    url: `/question/getAllQuestion.do?pageNum=${params.pageNum}&pageSize=${params.pageSize}&sortType=${params.sortType}`,
+    method: 'get'
+})

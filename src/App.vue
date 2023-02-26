@@ -8,8 +8,10 @@
         <Slider ref="slider" id="slider" v-show="isShow&&this.$route.path!=='/topic/setTopic'"></Slider>
       </transition>
 
-      <Content :style="this.$route.path==='/topic/setTopic'?hiddenSlider:''" id="content" ref="content"></Content>
+      <Content v-bind:content-width="contentWidth" :style="this.$route.path==='/topic/setTopic'?hiddenSlider:''" ref="content"></Content>
+
     </div>
+
   </div>
 </template>
 
@@ -18,6 +20,7 @@
 import Header from "@/components/Header/Header.vue";
 import Slider from "@/components/Slider/Slider.vue";
 import Content from "@/components/Content/Content.vue";
+import {c} from "caniuse-lite/data/browserVersions";
 
 export default {
   name: 'App',
@@ -34,11 +37,14 @@ export default {
       contentWidth: null,
       sliderWidth: null,
       hiddenSlider: {
-        width: '100%'
+        width: this.contentWidth-this.sliderWidth+"px"
       }
     }
   },
   methods:{
+    c() {
+      return c
+    },
     showSlider(){
       if (this.$route.path!=='/topic/setTopic'){
         this.resize()
@@ -68,7 +74,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "public/definition";
+@import "public/common";
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -78,6 +84,7 @@ export default {
   color: #2c3e50;
   margin-top: 0;
 }
+
 #header {
   position: fixed;
   top: 0;
@@ -107,13 +114,5 @@ export default {
     background-color: white;
   }
 
-  #content {
-    float: right;
-    width: calc(~"(100% - @{sliderWidth})");
-    transition: @transition-all;
-    margin-top: 0;
-    background-color: #f4f4f4;
-    min-height: calc(90vh);
-  }
 }
 </style>

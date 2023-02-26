@@ -2,7 +2,7 @@
   <div>
     <Title @getTitle="getTitle" v-bind:index="index" v-bind:title="title" v-bind:isStatus="isStatus"></Title>
 
-    <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
+    <Single v-bind:items="items"></Single>
 
     <UpdateButton v-if="isStatus==='create'"></UpdateButton>
   </div>

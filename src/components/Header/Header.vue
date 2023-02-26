@@ -18,15 +18,15 @@
         </router-link>
       </el-menu-item>
       <el-menu-item class="el-menu-item-hover" index="4">
-        <router-link to="/home">
+        <router-link to="/question/listQuestion">
           题目
         </router-link>
       </el-menu-item>
-      <el-menu-item class="el-menu-item-hover" index="5">
-        <router-link to="/topic/setTopic">
-          出题
-        </router-link>
-      </el-menu-item>
+<!--      <el-menu-item class="el-menu-item-hover" index="5">-->
+<!--        <router-link to="/topic/setTopic">-->
+<!--          出题-->
+<!--        </router-link>-->
+<!--      </el-menu-item>-->
       <el-menu-item index="6" id="noHover">
         <el-input  class="searchFrom" v-model="input" placeholder="请输入内容"></el-input>
         <el-button type="primary" class="searchBtn">搜索</el-button>
@@ -182,7 +182,7 @@ export default {
   .searchBtn {
     height: 40px;
     border-radius: 0 3px 3px 0;
-    margin-top: 1px;
+    margin-top: -8px;
   }
 
   .menu {

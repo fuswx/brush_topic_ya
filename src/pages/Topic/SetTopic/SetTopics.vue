@@ -1,16 +1,17 @@
 <template>
-  <div class="clearFloat">
-    <div id="left-box" class="clearFloat">
+  <div>
+
+    <div id="left-box">
       <TreeList v-bind:datas="datas"></TreeList>
     </div>
-
     <div id="right-box">
+      <BreadCrumb v-bind:breadCrumbs="breadCrumbs"></BreadCrumb>
 
       <div id="title-div">
         <div id="title">
           <span>
             <h1>
-              <input style="border-radius: 8px;" name="title" type="text" v-model="form.title" id="title-text" placeholder="请输入标题名称"/>
+              <input name="title" type="text" v-model="title" id="title-text" placeholder="请输入标题名称"/>
             </h1>
           </span>
         </div>
@@ -19,14 +20,14 @@
       <div id="right-box-content">
 
         <component ref="component"
+                   style="border-top: solid 2px rgba(230,230,230,0.6);padding-top: 10px"
                    v-bind:isStatus="'create'"
                    v-bind:index="index"
-                   v-bind:datas="form.components===undefined?undefined:form.components[index]"
-                   v-for="(component,index) in componentName"
+                   v-for="(component,index) in componentsName"
                    :key="index" :is="component.name">
         </component>
 
-        <el-row v-if="componentName.length>=1" style="border-top: solid 2px rgba(230,230,230,0.6);padding-top: 10px">
+        <el-row v-if="componentsName.length>=1" style="border-top: solid 2px rgba(230,230,230,0.6);padding-top: 10px">
           <el-button type="primary" plain @click="open">我要提交</el-button>
         </el-row>
       </div>
@@ -72,25 +73,19 @@ import Inputs from "@/components/Inputs/Inputs/Inputs.vue";
 import Icon from "@/components/Inputs/Icon/Icon.vue";
 import TextAreas from "@/components/Inputs/TextAreas/TextAreas.vue";
 import BreadCrumb from "@/components/BreadCrumb/BreadCrumb.vue";
-import {submitDefinitionForm} from "@/api";
 
 export default {
-  name: "SetTopic",
+  name: "SetTopics",
   components: {BreadCrumb, TextAreas, Icon, Inputs, Input, Select, CheckBox, Radio, TreeList},
   computed: {
-    ...mapGetters({
-      componentsName: 'componentsName'||[]
-    }),
+    ...mapGetters(['componentsName']),
     ...mapState({
       allInput: state => state.SetTopic.allInput,
-      form: state => state.GetTopic.form
     })
   },
   data(){
     return {
-      // id: '',
-      // title: "",
-      componentName: [],
+      title: "",
       filterText: '',
       breadCrumbs: [{name:'设置问卷'}],
       defaultProps: {
@@ -101,6 +96,7 @@ export default {
       inputContent: "",
       inputId: 0,
       postDatas:{
+        id: uuidv4(),
         components: [],
         componentNum: 0,
         uploadUserId: Math.round(Math.random()*100),
@@ -132,14 +128,14 @@ export default {
       this.$refs.showBox.style.display="none"
     },
     clickMethod(inputId){
-      this.componentName.push({name:this.allInput[inputId].name})
+      this.componentsName.push({name:this.allInput[inputId].name})
     },
     submitQuestionnaire(){
-      for (let i = 0; i < this.componentName.length; i++) {
+      for (let i = 0; i < this.componentsName.length; i++) {
         let initAnswer=[];
         let items=[];
         const inputsName=['Input','Inputs','TextAreas','Icon'];//对填空答案进行特殊处理
-        if (inputsName.includes(this.componentName[i].name)){
+        if (inputsName.includes(this.componentsName[i].name)){
           initAnswer=this.$refs.component[i].items;
           items=[];
         }else {
@@ -147,24 +143,23 @@ export default {
           items=this.$refs.component[i].items;
         }
         const component={
-          componentName: this.componentName[i].name,
+          componentName: this.componentsName[i].name,
           title: this.$refs.component[i].title,
           items: items,
           initAnswer: initAnswer
         };
-        this.postDatas.componentNum=this.componentName.length
+        this.postDatas.componentNum=this.componentsName.length
         this.postDatas.components.push(component)
       }
-      this.postDatas.id=this.form.id||uuidv4();
-      this.postDatas.title=this.form.title||"";
+      this.postDatas.id=uuidv4();
+      this.postDatas.title=this.title;
       this.postDatas.updateTime=new Date();
       this.postDatas.uploadTime=new Date();
       //提交创建的表单信息
-      // this.$store.dispatch("submitDefinitionForm",this.postDatas)
-      // this.$router.push("/topic/getTopic?formId="+this.postDatas.id)
-      submitDefinitionForm(this.postDatas)
-      window.location.replace(window.location.origin+"/#/topic/getTopic?formId="+this.postDatas.id)
-      window.location.reload()
+      console.log(this.postDatas)
+      this.$store.dispatch("submitDefinitionForm",this.postDatas)
+
+      this.$router.push("/topic/getTopic?formId="+this.postDatas.id)
     },
     open() {
       this.$confirm('确认提交?', '提示', {
@@ -193,14 +188,11 @@ export default {
       this.$store.dispatch("getTopicFrom",this.$route.query.formId)
     }
   },
-  updated() {
-    this.componentName= this.componentsName||[]
-  }
 }
 </script>
 
 <style scoped lang="less">
-@import "public/common";
+@import "public/definition";
 
 .el-button {
   transition: @transition-all;
@@ -242,12 +234,8 @@ input,textarea {
 }
 #right-box {
   background-color: white;
-  width: 100%;
+  width: calc(~"(100% - @{sliderWidth})");
   float: right;
-  box-sizing: border-box;
-  padding: 20px 30px;
-  border-radius: @border-radius-all;
-  box-shadow: @box-shadow-all;
 }
 #right-box-content {
   div {

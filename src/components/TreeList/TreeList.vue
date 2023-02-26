@@ -5,7 +5,7 @@
       <el-submenu :index="index+''" v-for="(ele,index) in datas" :key="ele.data.inputId">
         <template slot="title">
           <div class="innerBox">
-            <i class="el-icon-location"></i>
+            <i :class="iconClass[index]"></i>
             <span>{{ele.title}}</span>
           </div>
         </template>
@@ -34,6 +34,10 @@ export default {
   data(){
     return {
       filterText: '',
+      iconClass: ['el-icon-mobile','el-icon-scissors',
+        'el-icon-umbrella','el-icon-headset',
+        'el-icon-brush','el-icon-mouse','el-icon-coordinate',
+        'el-icon-magic-stick','el-icon-reading','el-icon-data-line'],
       defaultProps: {
         children: 'children',
         label: 'label'

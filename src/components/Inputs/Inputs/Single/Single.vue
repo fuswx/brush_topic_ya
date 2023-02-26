@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="isStatus==='create'||isStatus==='show'||isStatus==='list'">
+  <div>
     <el-input v-for="(data,index) in items" :key="index"
               placeholder="请输入内容"
               v-model="items[index]"

@@ -6,6 +6,8 @@ import Vuex from "vuex";
 import Slider from "@/store/Slider";
 import SetTopic from "@/store/Topic/SetTopic";
 import GetTopic from "@/store/Topic/GetTopic";
+import ListForm from "@/store/Topic/ListForm";
+import Question from "@/store/Question";
 
 Vue.use(Vuex);
 
@@ -15,6 +17,8 @@ export default new Vuex.Store({
     modules: {
         Slider,
         SetTopic,
-        GetTopic
+        GetTopic,
+        ListForm,
+        Question
     }
 })

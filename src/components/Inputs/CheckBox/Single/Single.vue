@@ -6,7 +6,7 @@
       </el-checkbox>
     </div>
 
-    <div id="outBox" v-if="isStatus==='list'">
+    <div id="outBox" v-if="isStatus==='list'||isStatus==='get'">
       <el-checkbox border v-model="items[index]"
                    v-for="(item,index) in items"
                    :label="item" :key="index">
@@ -28,8 +28,14 @@ export default {
   text-align: left;
 
   .el-checkbox {
+    width: 200px;
     margin-bottom: 10px;
     margin-right: 20px;
+    display: block;
+
+    &:not(:first-child){
+      margin-left: 0;
+    }
   }
 }
 

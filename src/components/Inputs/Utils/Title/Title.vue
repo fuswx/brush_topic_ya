@@ -7,8 +7,11 @@
                 v-model="newTitle">
       </el-input>
     </div>
-    <div class="inputTitleLit" v-if="isStatus==='list'">
+    <div class="inputTitleList" v-if="isStatus==='list'">
       <span>{{index+1+'.'+title}}</span>
+    </div>
+    <div class="inputTitleGet" v-if="isStatus==='get'">
+      <span v-html="title"></span>
     </div>
   </div>
 
@@ -32,7 +35,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-.inputTitleLit {
+.inputTitleList {
   display: block;
   text-align: left;
   margin-bottom: 20px;
@@ -41,5 +44,12 @@ export default {
     font-size: 20px;
     font-weight: 600;
   }
+}
+.inputTitleGet {
+  display: block;
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 600;
 }
 </style>

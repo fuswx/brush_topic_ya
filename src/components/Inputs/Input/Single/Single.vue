@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="isStatus==='create'||isStatus==='show'||isStatus==='list'">
+  <div>
     <el-input placeholder="请输入内容" v-model="items[index]" clearable
               v-for="(item,index) in items" :key="index">
     </el-input>

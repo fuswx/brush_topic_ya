@@ -1,26 +1,23 @@
 <template>
-  <div id="getTopic">
+  <div id="right-box">
 
-    <div id="right-box">
-      <div id="title-div">
-        <span id="title">{{form.title}}</span>
-      </div>
+    <div id="title-div">
+      <span id="title">{{form.title}}</span>
+    </div>
 
-      <div id="right-box-content">
+    <div id="right-box-content">
 
-        <component ref="component"
-                   v-bind:isStatus="'list'"
-                   v-bind:datas="form.components[index]"
-                   v-bind:index="index"
-                   v-for="(component,index) in componentsName"
-                   :key="index" :is="component.name">
-        </component>
+      <component ref="component"
+                 v-bind:isStatus="'list'"
+                 v-bind:datas="form.components[index]"
+                 v-bind:index="index"
+                 v-for="(component,index) in componentsName"
+                 :key="index" :is="component.name">
+      </component>
 
-        <el-row style="border-top: solid 2px rgba(230,230,230,0.6);padding-top: 10px">
-          <el-button type="primary" plain @click="open">我要提交</el-button>
-        </el-row>
-      </div>
-
+      <el-row style="border-top: solid 2px rgba(230,230,230,0.6);padding-top: 10px">
+        <el-button type="primary" plain @click="open">我要提交</el-button>
+      </el-row>
     </div>
 
   </div>
@@ -37,10 +34,11 @@ import Select from "@/components/Inputs/Select/Select.vue";
 import CheckBox from "@/components/Inputs/CheckBox/CheckBox.vue";
 import Radio from "@/components/Inputs/Radio/Radio.vue";
 import TreeList from "@/components/TreeList/TreeList.vue";
+import BreadCrumb from "@/components/BreadCrumb/BreadCrumb.vue";
 
 export default {
   name: "GetTopic",
-  components: {TextAreas, Icon, Inputs, Input, Select, CheckBox, Radio, TreeList},
+  components: {BreadCrumb, TextAreas, Icon, Inputs, Input, Select, CheckBox, Radio, TreeList},
   computed: {
     ...mapState({
       form: state => state.GetTopic.form
@@ -94,6 +92,8 @@ export default {
   background-color: white;
   width: 100%;
   float: right;
+  border-radius: @border-radius-all;
+  box-shadow: @box-shadow-all;
 }
 #right-box-content {
 

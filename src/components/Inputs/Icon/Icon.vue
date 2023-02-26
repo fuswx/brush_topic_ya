@@ -1,6 +1,6 @@
 <template>
 <div>
-  <Title @getTitle="getTitle" v-bind:index="index" v-bind:title="title" v-bind:isStatus="isStatus"></Title>
+  <Title @getTitle="getTitle" v-bind:index="index" v-bind:title="title"></Title>
 
   <Single v-bind:items="items" v-bind:isStatus="isStatus"></Single>
 

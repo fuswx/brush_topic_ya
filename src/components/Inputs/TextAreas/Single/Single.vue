@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="isStatus==='create'||isStatus==='show'||isStatus==='list'">
+  <div>
     <el-input v-for="(item,index) in items" :key="index"
               type="textarea"
               :rows="2"
