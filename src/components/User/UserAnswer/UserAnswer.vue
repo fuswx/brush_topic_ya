@@ -1,117 +1,64 @@
 <template>
-  <div class="discussItem">
-    <div class="discussUser">
-      <span class="discussUserImg"><img alt="discussUserImg" src="./img/user.jpg"></span>
-      <span class="discussUserState">
-        <span>{{userAnswerInfo.name}}</span>
-        <span>{{userAnswerInfo.publishTime}}</span>
-      </span>
-      <span class="discussUserOption" v-if="userAnswerInfo.isAnswer">
-        <span @click="askBtnClick">修改</span>
-        <span @click="deleteAsk">删除</span>
-      </span>
-    </div>
-    <div class="discussUserContent">{{userAnswerInfo.askContent}}</div>
+  <div class="discussItem" v-if="userAnswerInfo!==null">
+    <UserItem v-bind:user-answer-info="userAnswerInfo"></UserItem>
+
+    <transition enter-active-class="animate__animated animate__bounceInLeft"
+    leave-active-class="animate__animated animate__bounceOutLeft">
+      <div class="addComment" v-if="addIsShow&&addCommentItems.total>0" v-loading="loading">
+        <UserItem v-if="userAddComment" v-bind:user-answer-info="userAddComment"></UserItem>
+        <UserItem v-for="(addComment) in addCommentItems.list" :key="addComment.id" v-bind:user-answer-info="addComment" v-loading="loading"></UserItem>
+
+        <div class="pageHelper clearFloat">
+          <PageHelper v-bind:isSmall="true" v-bind:page-size="addCommentItems.pageSize" v-bind:total="addCommentItems.total"></PageHelper>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
+
+import UserItem from "@/components/User/UserAnswer/UserItem.vue";
+import PageHelper from "@/components/PageHelper/PageHelper.vue";
+import {mapState} from "vuex";
+
 export default {
   name: "UserAnswer",
+  components: {PageHelper, UserItem},
   props: ['userAnswerInfo'],
+  computed:{
+    ...mapState({
+      addCommentItems: state => state.Question.addCommentItems,
+      userAddComment: state => state.Question.userAddComment
+    })
+  },
+  data(){
+    return {
+      addIsShow: false,
+      loading: true
+    }
+  },
   methods: {
-    askBtnClick(){
-      this.$parent.askBtnClick()
+    handleChange(val) {
+      console.log(val);
     },
-    deleteAsk(){
-      this.$confirm('确认删除?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$parent.isAnswer=false
-        this.$parent.answerCount--
-        this.$parent.answerContent=""
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消删除'
-        });
-      });
+    handleCurrentChange(val){
+      this.$store.dispatch("getAddCommentByQuestionId",{pageNum:val,pageSize: this.addCommentItems.pageSize,commentId: this.userAnswerInfo.id,userId: this.userAnswerInfo.userId})
     }
   }
 }
 </script>
 
 <style scoped lang="less">
+
 .discussItem {
   margin-top: 5px;
   padding: 5px 5px 20px 5px;
   border-bottom: 2px solid #f4f4f4;
+  transition: all linear 1s;
 
-  .discussUser {
-    position: relative;
-    height: 50px;
-    margin-bottom: 10px;
-
-    & > * {
-      height: 50px;
-    }
-
-    .discussUserImg {
-      display: inline-block;
-      width: 50px;
-
-      img {
-        width: 50px;
-        height: 50px;
-      }
-    }
-
-    .discussUserState {
-      display: inline-block;
-      position: absolute;
-      margin-left: 10px;
-      top: 0;
-
-      & > * {
-        display: block;
-        margin-top: 10px;
-      }
-
-      span {
-        &:first-child {
-          font-size: 12px;
-          font-weight: 600;
-        }
-
-        &:last-child {
-          font-size: 12px;
-          font-weight: 400;
-          color: #9d9d9d;
-        }
-      }
-
-    }
-
-    .discussUserOption {
-      float: right;
-      font-size: 12px;
-      font-weight: 400;
-      color: #9d9d9d;
-
-      span {
-        cursor: pointer;
-        margin-right: 10px;
-      }
-    }
+  .addComment {
+    padding: 0 40px;
   }
-
-  .discussUserContent {}
-
 }
 </style>

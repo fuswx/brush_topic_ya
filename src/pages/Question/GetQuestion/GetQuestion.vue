@@ -22,11 +22,11 @@
         </span>
       </div>
       <div class="questionInfo">
-        <el-tag size="small">分类</el-tag>
-        <el-tag type="success" size="small">{{question.grade}}</el-tag>
-        <el-tag type="info" size="small">{{question.subject}}</el-tag>
+        <el-tag @click="this.$router.push('/question/listQuestion')" style="cursor: pointer;" size="small">分类</el-tag>
+        <el-tag @click="this.$router.push('/question/listQuestion')" style="cursor: pointer;" type="success" size="small">{{question.grade}}</el-tag>
+        <el-tag @click="this.$router.push('/question/listQuestion')" style="cursor: pointer;" type="info" size="small">{{question.subject}}</el-tag>
         <span style="text-align: right;margin-bottom: 5px;float: right;font-size: 12px;font-weight: 400;color: #9d9d9d;">
-          <span style="display: block">特别鸣谢：<span>用户名</span></span>
+          <span style="display: block">特别鸣谢：<router-link style="color: cornflowerblue;transition: all 0.5s linear;" :to="'/user/getUser?id='+question.uploadUserId">{{question.uploadUserName}}</router-link></span>
           <span style="display: block">上传时间：<span>{{uploadTime}}</span></span>
         </span>
       </div>
@@ -37,17 +37,21 @@
         <el-button @click="hiddenAnswer=!hiddenAnswer" v-if="!hiddenAnswer" size="small" type="success" plain>隐藏解析</el-button>
         <el-button @click="hiddenAnswer=!hiddenAnswer" v-if="hiddenAnswer" size="small" type="primary" plain>显示解析</el-button>
       </div>
-      <div v-if="!hiddenAnswer" class="questionAnswer">
-        <span>解析：<span v-for="(initAnswer,index) in question.initAnswer" :key="index">{{initAnswer}} </span></span>
-        <span style="display: block;margin-top: 5px" v-html="question.answer"></span>
-      </div>
+      <transition enter-active-class="animate__animated animate__bounceInLeft"
+                  leave-active-class="animate__animated animate__bounceOutLeft">
+        <div v-if="!hiddenAnswer" class="questionAnswer">
+          <span>解析：<span v-for="(initAnswer,index) in question.initAnswer" :key="index">{{initAnswer}} </span></span>
+          <span style="display: block;margin-top: 5px" v-html="question.answer"></span>
+        </div>
+      </transition>
     </div>
 
     <div class="questionDiscuss">
       <div class="discussNum">
-        <span>这里一共有 <span style="color: cornflowerblue">{{question.answerCount}}</span> 条评论喵~</span>
+        <span v-if="commentItems.total>0">这里一共有 <span style="color: cornflowerblue">{{question.answerCount}}</span> 条评论喵~</span>
+        <span v-else>这里还无人涉足哦，不要让题主太寂寞喵~</span>
         <span style="position: absolute;right: 0;bottom:0;display: inline-block">
-          <el-button v-if="!isAnswer" @click="askBtnClick" size="mini" type="primary" plain><span class="el-icon-chat-dot-square"></span> 我要回答</el-button>
+          <el-button v-if="commentItems" @click="askBtnClick" size="mini" type="primary" plain><span class="el-icon-chat-dot-square"></span> 我要回答</el-button>
           <el-dialog
               title="不要回答！不要回答！不要回答(dog"
               :visible.sync="dialogVisible"
@@ -74,17 +78,13 @@
         </span>
       </div>
       <div class="discussItems">
-        <UserAnswer v-bind:user-answer-info="{name:'root',publishTime:'刚刚',askContent: this.answerContent,isAnswer: this.isAnswer}" v-if="isAnswer"></UserAnswer>
-        <UserAnswer v-bind:user-answer-info="{name:'初始用户名',publishTime:'n小时前',askContent:'用户评论内容，调试凑字数哈哈哈，调试凑字数哈哈哈，调试凑字数哈哈哈，调试凑字数哈哈哈'}"></UserAnswer>
-        <UserAnswer v-bind:user-answer-info="{name:'初始用户名',publishTime:'n小时前',askContent:'用户评论内容，调试凑字数哈哈哈，调试凑字数哈哈哈，调试凑字数哈哈哈，调试凑字数哈哈哈'}"></UserAnswer>
-        <UserAnswer v-bind:user-answer-info="{name:'初始用户名',publishTime:'n小时前',askContent:'用户评论内容，调试凑字数哈哈哈，调试凑字数哈哈哈，调试凑字数哈哈哈，调试凑字数哈哈哈'}"></UserAnswer>
-        <UserAnswer v-bind:user-answer-info="{name:'初始用户名',publishTime:'n小时前',askContent:'用户评论内容，调试凑字数哈哈哈，调试凑字数哈哈哈，调试凑字数哈哈哈，调试凑字数哈哈哈'}"></UserAnswer>
-        <UserAnswer v-bind:user-answer-info="{name:'初始用户名',publishTime:'n小时前',askContent:'用户评论内容，调试凑字数哈哈哈，调试凑字数哈哈哈，调试凑字数哈哈哈，调试凑字数哈哈哈'}"></UserAnswer>
+        <UserAnswer v-bind:user-answer-info="userComment" v-if="userComment!==undefined"></UserAnswer>
+        <UserAnswer v-for="(comment) in commentItems.list" :key="comment.index" v-bind:user-answer-info="comment"></UserAnswer>
       </div>
     </div>
 
-    <div class="pageHelper clearFloat">
-      <PageHelper v-bind:page-info="pageInfo"></PageHelper>
+    <div class="pageHelper clearFloat" v-if="commentItems.total>0">
+      <PageHelper v-bind:page-size="commentItems.pageSize" v-bind:total="commentItems.total"></PageHelper>
     </div>
   </div>
 </template>
@@ -105,15 +105,19 @@ export default {
   name: "GetQuestion",
   components: {UserAnswer, PageHelper,TextAreas, Icon, Inputs, Input, Select, CheckBox, Radio},
   mounted() {
-    this.$store.dispatch("getQuestionById",31)
+    this.$store.dispatch("getQuestionById",this.$route.query.id)
+    this.$store.dispatch("getCommentByQuestionId",{pageNum:1,pageSize: 10,questionId: this.$route.query.id,userId: 1})
+    this.$store.dispatch("getCommentByQuestionIdAndUserId",{questionId: this.$route.query.id,userId: 1})
   },
   updated() {
-    //格式化时间格式
     this.uploadTime=this.timeStampString(this.question.uploadTime)
   },
+
   computed: {
     ...mapState({
-      question: state => state.Question.question
+      question: state => state.Question.question,
+      userComment: state => state.Question.userComment,
+      commentItems: state => state.Question.commentItems
     })
   },
   data(){
@@ -123,15 +127,8 @@ export default {
       dialogVisible: false,
       hiddenAnswer: true,
       isCollect: false,
-      isAnswer: false,
-      uploadTime: null,
-      pageInfo:{
-        pageSize:10,
-        pages:10,
-        pageNum:10,
-        total:100
-      },
-      answerContent: "<h5>aafasfa</h5>",
+      answerContent: "",
+      uploadTime: ''
     }
   },
   methods: {
@@ -154,7 +151,6 @@ export default {
         type: 'warning'
       }).then(() => {
         this.dialogVisible=false
-        this.isAnswer=true
         this.question.answerCount++
         this.$message({
           type: 'success',
@@ -167,14 +163,15 @@ export default {
         });
       });
     },
+    handleCurrentChange(val){
+      this.$store.dispatch("getCommentByQuestionId",{pageNum:val,pageSize: this.commentItems.pageSize,questionId:this.question.id,userId: 1})
+    },
+
     timeStampString(time) {
       var datetime = new Date(time);
       var year = datetime.getFullYear();
       var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
       var date = datetime.getDate() < 10? "0" + datetime.getDate() : datetime.getDate();
-      var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
-      var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
-      var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
       return year+"年"+month+"月"+date+"日";
     }
   }
@@ -196,6 +193,7 @@ export default {
   .questionDetail {
     background-color: white;
     padding: 20px 15px;
+    transition: @transition-all;
 
     & > * {
       margin-top: 10px;

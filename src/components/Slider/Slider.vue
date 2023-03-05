@@ -11,6 +11,9 @@ export default {
   components: {TreeList},
   data() {
     return {
+      gradeId: undefined,
+      subjectId: undefined,
+      sortType: 'time',
     };
   },
   watch: {
@@ -22,17 +25,28 @@ export default {
     leaveMethod(){},
     enterMethod(){
     },
-    clickMethod(id){
-      console.log(id)
+    clickMethod(value,data){
+      if (data.children){
+        this.gradeId=data.value
+      }else {
+        this.subjectId=data.value
+        this.$bus.$emit('getGradeIdAndSubjectId',this.subjectId,this.gradeId)
+        this.$store.dispatch("getAllQuestion",{pageNum:1,pageSize: 10,sortType: this.sortType,title:'',subjectIds:[this.subjectId],gradeIds:[this.gradeId],types:null,degrees:null})
+        this.$router.push('/question/listQuestion')
+      }
     }
   },
   mounted() {
     //派发action获取组件的数据
     this.$store.dispatch("getSortGradeList")
     this.$store.dispatch("getSubjectList")
+    this.$bus.$on('getSortType',(sortType)=>{
+      this.sortType=sortType
+    })
   },
-  updated() {
-  }
+  beforeDestroy() {
+    this.$bus.$off('getSortType')
+  },
 }
 </script>
 

@@ -5,10 +5,10 @@
       <transition
           enter-active-class="animate__animated animate__backInLeft animate__faster"
           leave-active-class="animate__animated animate__backOutLeft animate__fast">
-        <Slider ref="slider" id="slider" v-show="isShow&&this.$route.path!=='/topic/setTopic'"></Slider>
+        <Slider ref="slider" id="slider" v-show="isShow&&(this.$route.path!=='/topic/setTopic'||this.$route.path==='/question/setQuestion')"></Slider>
       </transition>
 
-      <Content v-bind:content-width="contentWidth" :style="this.$route.path==='/topic/setTopic'?hiddenSlider:''" ref="content"></Content>
+      <Content v-bind:content-width="contentWidth" :style="this.$route.path==='/topic/setTopic'||this.$route.path==='/question/setQuestion'?hiddenSlider:''" ref="content"></Content>
 
     </div>
 
@@ -46,7 +46,7 @@ export default {
       return c
     },
     showSlider(){
-      if (this.$route.path!=='/topic/setTopic'){
+      if (this.$route.path!=='/topic/setTopic'&&this.$route.path!=='/question/setQuestion'){
         this.resize()
       }
     },

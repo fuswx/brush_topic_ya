@@ -41,13 +41,13 @@
             <div id="box-checked">
             <span id="input-content">
 <!--              <span v-html="inputContent">inputContent</span>-->
-              <Radio     v-bind:isStatus="'show'" v-if="this.inputId===1"></Radio>
-              <CheckBox  v-bind:isStatus="'show'" v-if="this.inputId===2"></CheckBox>
-              <Select    v-bind:isStatus="'show'" v-if="this.inputId===3"></Select>
-              <Input     v-bind:isStatus="'show'" v-if="this.inputId===4"></Input>
-              <Inputs    v-bind:isStatus="'show'" v-if="this.inputId===5"></Inputs>
-              <TextAreas v-bind:isStatus="'show'" v-if="this.inputId===6"></TextAreas>
-              <Icon      v-bind:isStatus="'show'" v-if="this.inputId===7"></Icon>
+              <Radio     v-bind:isStatus="'show'" v-if="this.value===1"></Radio>
+              <CheckBox  v-bind:isStatus="'show'" v-if="this.value===2"></CheckBox>
+              <Select    v-bind:isStatus="'show'" v-if="this.value===3"></Select>
+              <Input     v-bind:isStatus="'show'" v-if="this.value===4"></Input>
+              <Inputs    v-bind:isStatus="'show'" v-if="this.value===5"></Inputs>
+              <TextAreas v-bind:isStatus="'show'" v-if="this.value===6"></TextAreas>
+              <Icon      v-bind:isStatus="'show'" v-if="this.value===7"></Icon>
             </span>
             </div>
           </div>
@@ -99,7 +99,7 @@ export default {
       },
       inputTitle: "",
       inputContent: "",
-      inputId: 0,
+      value: 0,
       postDatas:{
         components: [],
         componentNum: 0,
@@ -109,19 +109,22 @@ export default {
         eg: ""
       },
       datas: [
-        {title: '选择题',data: [{label: '单选',inputId: 1},{label: '多选',inputId: 2},{label: '下拉框',inputId: 3}]},
-        {title: '填空题',data: [{label: '单项填空',inputId: 4},{label: '多项填空',inputId: 5},{label: '矩阵填空',inputId: 6},{label: '表格填空',inputId: 7}]},
-        {title: '矩阵题',data: [{label: '矩阵单选',inputId: 8},{label: '矩阵量表',inputId: 9},{label: '矩阵滑动条',inputId: 10},{label: '表格下拉框',inputId: 11}]},
-        {title: '量表题',data: [{label: '量表题',inputId: 12},{label: 'NPS量表',inputId: 13},{label: '评分单选',inputId: 14},{label: '评分多选',inputId: 15},{label: '矩阵量表',inputId: 16},{label: '评价题',inputId: 17}]},
-        {title: '个人信息',data: [{label: '姓名',inputId: 18},{label: '基本信息',inputId: 19},{label: '性别',inputId: 20},{label: '年龄段',inputId: 21},{label: '省市',inputId: 22},{label: '省市区',inputId: 23},{label: '手机',inputId: 24},{label: '日期',inputId: 25},{label: '时间',inputId: 26},{label: '职业',inputId: 27},{label: '行业',inputId: 28},{label: '高校',inputId: 29},{label: '邮寄地址',inputId: 30}]},
+        {title: '选择题',data: [{label: '单选',value: 1},{label: '多选',value: 2},{label: '下拉框',value: 3}]},
+        {title: '填空题',data: [{label: '单项填空',value: 4},{label: '多项填空',value: 5},{label: '矩阵填空',value: 6},{label: '表格填空',value: 7}]},
+        {title: '矩阵题',data: [{label: '矩阵单选',value: 8},{label: '矩阵量表',value: 9},{label: '矩阵滑动条',value: 10},{label: '表格下拉框',value: 11}]},
+        {title: '量表题',data: [{label: '量表题',value: 12},{label: 'NPS量表',value: 13},{label: '评分单选',value: 14},{label: '评分多选',value: 15},{label: '矩阵量表',value: 16},{label: '评价题',value: 17}]},
+        {title: '个人信息',data: [{label: '姓名',value: 18},{label: '基本信息',value: 19},{label: '性别',value: 20},{label: '年龄段',value: 21},{label: '省市',value: 22},{label: '省市区',value: 23},{label: '手机',value: 24},{label: '日期',value: 25},{label: '时间',value: 26},{label: '职业',value: 27},{label: '行业',value: 28},{label: '高校',value: 29},{label: '邮寄地址',value: 30}]},
           ],
     }
   },
   methods:{
-    enterMethod(inputId){
-      this.inputId=inputId+1;
-      this.inputTitle=this.allInput[inputId].desc
-      this.inputContent=this.allInput[inputId].content
+    subComponent(index){
+      this.componentsName.splice(index,1)
+    },
+    enterMethod(value){
+      this.value=value+1;
+      this.inputTitle=this.allInput[value].desc
+      this.inputContent=this.allInput[value].content
       this.$refs.showBox.style.display="block"
       this.$refs.showBox.style.top=event.clientY+document.body.scrollTop+-this.$refs.showBox.clientHeight/2+"px"
       if (event.clientY-this.$refs.showBox.clientHeight/2<60){
@@ -131,8 +134,8 @@ export default {
     leaveMethod(){
       this.$refs.showBox.style.display="none"
     },
-    clickMethod(inputId){
-      this.componentName.push({name:this.allInput[inputId].name})
+    clickMethod(value){
+      this.componentName.push({name:this.allInput[value].name})
     },
     submitQuestionnaire(){
       for (let i = 0; i < this.componentName.length; i++) {

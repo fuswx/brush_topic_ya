@@ -17,3 +17,10 @@ export default new VueRouter({
         return {y:0};
     }
 })
+
+//解决ElementUI导航栏中的vue-router在3.0版本以上重复点击菜单报错的问题
+import Router from 'vue-router';
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch(err => err)
+}

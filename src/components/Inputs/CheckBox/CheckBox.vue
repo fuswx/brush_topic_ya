@@ -41,7 +41,7 @@ export default {
     },
     subComponent(){
       if (--this.itemCount<=0){
-        this.$parent.componentsName.splice(this.index,1)
+        this.$parent.subComponent(this.index)
       }else {
         this.items.pop()
       }

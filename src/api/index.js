@@ -69,6 +69,43 @@ export const getQuestionById=(id)=>requests({
 })
 
 export const getAllQuestion=(params)=>requests({
-    url: `/question/getAllQuestion.do?pageNum=${params.pageNum}&pageSize=${params.pageSize}&sortType=${params.sortType}`,
+    url: `/question/getAllQuestion.do`,
+    method: 'post',
+    data: params
+})
+
+export const getCommentByQuestionId=(params)=>requests({
+    url: `/comment/getCommentByQuestionId.do?pageNum=${params.pageNum}&pageSize=${params.pageSize}&questionId=${params.questionId}&userId=${params.userId}`,
+    method: 'get'
+})
+
+export const getCommentByQuestionIdAndUserId=(params)=>requests({
+    url: `/comment/getCommentByQuestionIdAndUserId.do?questionId=${params.questionId}&userId=${params.userId}`,
+    method: 'get'
+})
+
+export const getAddCommentByQuestionId=(params)=>requests({
+    url: `/comment/getAddCommentByQuestionId.do?pageNum=${params.pageNum}&pageSize=${params.pageSize}&commentId=${params.commentId}&userId=${params.userId}`,
+    method: 'get'
+})
+
+export const getAddCommentByQuestionIdAndUserId=(params)=>requests({
+    url: `/comment/getAddCommentByQuestionIdAndUserId.do?commentId=${params.commentId}&userId=${params.userId}`,
+    method: 'get'
+})
+
+export const getAllInput=()=>requests({
+    url: `/input/findAll.do`,
+    method: 'get'
+})
+
+export const setQuestionForm=(question)=>requests({
+    url: `/question/setQuestionForm.do`,
+    method: 'post',
+    data: question
+})
+
+export const getQuestionByKeyCode=(keyCode)=>requests({
+    url: `/question/getQuestionByKeyCode.do?keyCode=${keyCode}`,
     method: 'get'
 })

@@ -13,7 +13,14 @@ const state={
 const mutations={
     //全部年级
     GETGRADELIST(state,gradeList){
-        state.gradeList=gradeList;
+        const gradeListRe=[];
+        for (const subject of gradeList) {
+            gradeListRe.push({
+                label :subject.name,
+                value: subject.id
+            })
+        }
+        state.gradeList=gradeListRe;
     },
     //获取各类别年级数据
     GETSORTGRADELIST(state,sortGradeList){
@@ -24,7 +31,8 @@ const mutations={
         const subjectListRe=[];
         for (const subject of subjectList) {
             subjectListRe.push({
-                label :subject.name
+                label :subject.name,
+                value: subject.id
             })
         }
         state.subjectList=subjectListRe;
@@ -58,14 +66,6 @@ const actions={
         }
     }
 };
-
-// [{label: '一年级', children: [{label: '语文',},{label: '数学',},{label: '英语',}]},
-//     {label: '二年级', children: [{label: '语文',},{label: '数学',},{label: '英语',}]},
-//     {label: '三年级', children: [{label: '语文',},{label: '数学',},{label: '英语',}]},
-//     {label: '四年级', children: [{label: '语文',},{label: '数学',},{label: '英语',}]},
-//     {label: '五年级', children: [{label: '语文',},{label: '数学',},{label: '英语',}]},
-//     {label: '六年级', children: [{label: '语文',},{label: '数学',},{label: '英语',}]},
-// ]
 
 //计算属性，在项目中为简化数据而生
 //项目中：getters主要的作用：简化仓库中的数据（简化数据而生）
@@ -111,18 +111,21 @@ const getters={
         for (i = 0; i < state.sortGradeList[1].length; i++) {
             junior.push({
                 label: state.sortGradeList[1][i].name,
+                value: state.sortGradeList[1][i].id,
                 children: state.subjectList
             })
         }
         for (i = 0; i < state.sortGradeList[0].length; i++) {
             primary.push({
                 label: state.sortGradeList[0][i].name,
+                value: state.sortGradeList[0][i].id,
                 children: state.subjectList,
             })
         }
         for (i = 0; i < state.sortGradeList[2].length; i++) {
             high.push({
                 label: state.sortGradeList[2][i].name,
+                value: state.sortGradeList[2][i].id,
                 children: state.subjectList
             })
         }

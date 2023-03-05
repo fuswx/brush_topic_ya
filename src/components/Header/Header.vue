@@ -12,21 +12,41 @@
           首页
         </router-link>
       </el-menu-item>
+
       <el-menu-item class="el-menu-item-hover" index="3">
-        <router-link to="/topic/listForm">
-          问卷
-        </router-link>
+        <el-dropdown :hide-on-click="false" placement="bottom">
+          <router-link to="/topic/listForm">问卷</router-link>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item class="menu-item">
+              <router-link to="/topic/listForm">查看所有问卷</router-link>
+            </el-dropdown-item>
+            <el-dropdown-item class="menu-item">
+              <router-link to="/topic/setTopic">编写问卷</router-link>
+            </el-dropdown-item>
+            <el-dropdown-item class="menu-item">
+              <router-link to="/topic/listForm">我的问卷</router-link>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-menu-item>
+
       <el-menu-item class="el-menu-item-hover" index="4">
-        <router-link to="/question/listQuestion">
-          题目
-        </router-link>
+        <el-dropdown :hide-on-click="false" placement="bottom">
+          <router-link to="/question/listQuestion">题目</router-link>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item class="menu-item">
+              <router-link to="/question/listQuestion">查看所有题目</router-link>
+            </el-dropdown-item>
+            <el-dropdown-item class="menu-item">
+              <router-link to="/question/setQuestion">编写题目</router-link>
+            </el-dropdown-item>
+            <el-dropdown-item class="menu-item">
+              <router-link to="/topic/listForm">组合卷子</router-link>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-menu-item>
-<!--      <el-menu-item class="el-menu-item-hover" index="5">-->
-<!--        <router-link to="/topic/setTopic">-->
-<!--          出题-->
-<!--        </router-link>-->
-<!--      </el-menu-item>-->
+
       <el-menu-item index="6" id="noHover">
         <el-input  class="searchFrom" v-model="input" placeholder="请输入内容"></el-input>
         <el-button type="primary" class="searchBtn">搜索</el-button>
@@ -64,7 +84,9 @@ export default {
     return {
       activeIndex: '1',
       activeIndex2: '1',
-      input: ''
+      input: '',
+      topicVisible: false,
+      questionVisible: false,
     };
   },
   mounted() {
@@ -80,6 +102,17 @@ export default {
 <style scoped lang="less">
 @font-color: cornflowerblue;
 @transition-all:all 0.5s linear;
+
+.menu-item {
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+
+  a {
+    color: cornflowerblue;
+  }
+}
 
 #header-info {
   width: 260px;
@@ -128,6 +161,14 @@ export default {
     color: cornflowerblue;
     font-weight: 700;
     font-size: 14px;
+  }
+}
+#header-info-passwordChange:hover,
+#header-info-logout:hover {
+  background-color: rgba(255,255,255,0.5);
+
+  a{
+    color: cornflowerblue!important;
   }
 }
 #header-info-passwordChange ,
